@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import winreg
 import ctypes #For Admin rights check
 import subprocess #For running commands in CMD
@@ -23,12 +25,18 @@ def fix_skip_rearm():
 	else:
 		winreg.CloseKey(handle)
 		return True
+		
+	
+def main():
+	if is_admin():
+		res = fix_skip_rearm()
+		if res:
+			print("Rearming...  ", end="")
+			subprocess.check_output("SLMGR /REARM", shell=True)
+			print("DONE\n")
+	else:
+		print("Run the script as Admin!")
 
-if is_admin():
-	res = fix_skip_rearm()
-	if res:
-		print("Rearming...  ", end="")
-		subprocess.check_output("SLMGR /REARM", shell=True)
-		print("DONE\n")
-else:
-	print("Run the script as Admin!")
+
+if __name__== "__main__":
+	main()
